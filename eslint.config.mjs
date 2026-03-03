@@ -13,6 +13,15 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+	{
+		rules: {
+			'dot-notation': 'off',
+			'no-useless-constructor': 'off',
+			'@typescript-eslint/no-unused-vars': 'warn',
+			'@typescript-eslint/no-namespace': 'off',
+			'@typescript-eslint/explicit-function-return-type': 'off',
+		} 
+	}
 ]);
 
 export default eslintConfig;
