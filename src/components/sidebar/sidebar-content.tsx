@@ -50,7 +50,7 @@ export function SidebarContent() {
 					<section className="p-6">
 						<div className="mb-4 md:hidden">
 							<div className="flex items-center justify-between">
-								<Button variant="secondary" aria-label="Fechar menu" title="Fechar menu">
+								<Button variant="secondary">
 									<X className="h-5 w-5 text-gray-100" />
 								</Button>
 							</div>
@@ -61,6 +61,8 @@ export function SidebarContent() {
 								<Button
 									onClick={collapseSidebar}
 									variant="icon"
+									title="Minimizar sidebar"
+									aria-label="Minimizar sidebar"
 									className="focus:ring-accent-500 hidden rounded-lg p-2 transition-colors hover:bg-gray-700 focus:ring-2 focus:outline-none md:inline-flex"
 								>
 									<ArrowLeftToLine className="h-5 w-5 text-gray-100" />
