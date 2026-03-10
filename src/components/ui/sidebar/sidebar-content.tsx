@@ -1,15 +1,25 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { ChangeEvent, startTransition, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Logo } from '../logo/logo';
-import { Button } from '../ui/button';
+import { Logo } from '../../logo/logo';
+import { Button } from '../button';
 
 import { ArrowLeftToLine, ArrowRightToLine, Plus, X } from 'lucide-react';
+import { Input } from '../input';
+import { PromptList } from '@/components/prompts/prompt-list';
+import { IPrompt } from '@/core/domain/prompts/prompt.entity';
 
-export function SidebarContent() {
+export interface ISidebarContentProps {
+	prompts: IPrompt[];
+}
+
+export function SidebarContent({ prompts }: ISidebarContentProps) {
+	const searchParams = useSearchParams();
+
 	const [isCollapsed, setIsCollapsed] = useState(false);
+	const [query, setQuery] = useState(searchParams.get('q') ?? '');
 
 	const router = useRouter();
 
@@ -23,6 +33,16 @@ export function SidebarContent() {
 
 	function handleNewPrompt() {
 		router.push('/new');
+	}
+
+	function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
+		const newQuery = event.target.value;
+		setQuery(newQuery);
+
+		startTransition(() => {
+			const url = newQuery ? `/?q=${encodeURIComponent(newQuery)}` : '/';
+			router.push(url, { scroll: false });
+		});
 	}
 
 	return (
@@ -42,6 +62,12 @@ export function SidebarContent() {
 							<ArrowRightToLine className="h-5 w-5 text-gray-100" />
 						</Button>
 					</header>
+
+					<div className="flex flex-col items-center space-y-4">
+						<Button onClick={handleNewPrompt} aria-label="Novo prompt" title="Novo prompt">
+							<Plus className="size-5 text-white" />
+						</Button>
+					</div>
 				</section>
 			)}
 
@@ -70,6 +96,19 @@ export function SidebarContent() {
 							</header>
 						</div>
 
+						<section className="mb-5">
+							<form>
+								<Input
+									name="q"
+									type="text"
+									placeholder="Buscar Prompt..."
+									autoFocus
+									value={query}
+									onChange={handleQueryChange}
+								/>
+							</form>
+						</section>
+
 						<div>
 							<Button onClick={handleNewPrompt} className="w-full" size="lg">
 								<Plus className="mr-2 h-5 w-5" />
@@ -77,6 +116,10 @@ export function SidebarContent() {
 							</Button>
 						</div>
 					</section>
+
+					<nav aria-label="Lista de prompts" className="flex-1 overflow-auto px-6 pb-6">
+						<PromptList prompts={prompts} />
+					</nav>
 				</>
 			)}
 		</aside>
