@@ -161,4 +161,17 @@ describe('SidebarContent', () => {
 
 		expect(searchInput).toHaveValue(text);
 	});
+
+	it('should submit form when type on search field', async () => {
+		const submitSpy = jest.spyOn(HTMLFormElement.prototype, 'requestSubmit').mockImplementation(() => undefined);
+
+		makeSut();
+
+		const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+		await user.type(searchInput, 'AI');
+
+		expect(submitSpy).toHaveBeenCalled();
+		submitSpy.mockRestore();
+	});
 });
